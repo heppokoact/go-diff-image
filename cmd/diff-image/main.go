@@ -1,14 +1,14 @@
 package main
 
+import "C"
+
 import (
-	"flag"
-	"fmt"
 	"image"
 	"image/png"
 	"log"
 	"os"
 
-	diffimage "github.com/murooka/go-diff-image"
+	diffimage "../.."
 )
 
 func mustOpen(filename string) *os.File {
@@ -48,22 +48,14 @@ func rate16(c uint32, r float64) uint16 {
 }
 
 func main() {
-	var (
-		output string
-	)
-	flag.StringVar(&output, "output", "diff.png", "output filename")
-	flag.StringVar(&output, "o", "diff.png", "output filename")
-	flag.Parse()
-	args := flag.Args()
-	if len(args) != 2 {
-		fmt.Println("usage: imagediff [<option>...] <image1> <image2>")
-		os.Exit(1)
-	}
+}
 
-	img1 := mustLoadImage(args[0])
-	img2 := mustLoadImage(args[1])
+//export diffImage
+func diffImage(imgPath1 string, imgPath2 string, outputPath string) {
+	img1 := mustLoadImage(imgPath1)
+	img2 := mustLoadImage(imgPath2)
 
 	dst := diffimage.DiffImage(img1, img2)
 
-	mustSaveImage(dst, output)
+	mustSaveImage(dst, outputPath)
 }
